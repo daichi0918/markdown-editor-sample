@@ -1,10 +1,10 @@
 'use client';
-import * as React from 'react';
-import { Button } from '../../components/button';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Header } from '../../components/header';
 import Link from 'next/link';
+import { getMemos, MemoRecord } from '../../indexeddb/memos';
+import { useRouter } from 'next/navigation';
 
 const HeaderArea = styled.div`
   position: fixed;
@@ -22,18 +22,62 @@ const Wrapper = styled.div`
   padding: 0 1rem;
 `;
 
-const History: React.FC = () => {
+const Memo = styled.button`
+  display: block;
+  background-color: white;
+  border: 1px solid gray;
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: left;
+`;
+
+const MemoTitle = styled.div`
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+`;
+
+const MemoText = styled.div`
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+interface Props {
+  setText: (text: string) => void;
+}
+
+export const History: React.FC<Props> = (props) => {
+  const { setText } = props;
+  const [memos, setMemos] = useState<MemoRecord[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    getMemos().then(setMemos);
+  }, []);
   return (
     <>
-      {/* <h1>History</h1>
-      <Button onClick={() => router.push('/editor')}>エディタへ戻る</Button> */}
       <HeaderArea>
         <Header title="履歴">
           <Link href={'/editor'}>エディタに戻る</Link>
         </Header>
       </HeaderArea>
-      <Wrapper>TODO: 履歴表示</Wrapper>
+      <Wrapper>
+        {' '}
+        {memos.map((memo) => (
+          <Memo
+            key={memo.datetime}
+            onClick={() => {
+              setText(memo.text);
+              router.push('/editor');
+            }}
+          >
+            <MemoTitle>{memo.title}</MemoTitle>
+            <MemoText>{memo.text}</MemoText>
+          </Memo>
+        ))}
+      </Wrapper>
     </>
   );
 };
