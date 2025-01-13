@@ -1,9 +1,18 @@
 'use client';
-import styled from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
+import Editor from '../app/editor/page';
 
-const Header = styled.h1`
-  color: red;
+const GlobalStyle = createGlobalStyle`
+body * {
+  box-sizing: border-box;
+}
 `;
-export default function Home() {
-  return <Header>markdown editor</Header>;
+
+export default function Main() {
+  return (
+    <>
+      <GlobalStyle />
+      <Editor />
+    </>
+  );
 }
