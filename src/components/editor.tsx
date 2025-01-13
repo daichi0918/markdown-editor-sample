@@ -84,7 +84,6 @@ export default function Editor() {
           <Link href={'/history'}>履歴を見る</Link>
         </Header>
       </HeaderArea>
-
       <Wrapper>
         <TextArea
           onChange={(event) => setText(event.target.value)}
